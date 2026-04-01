@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>VED INTERNATIONAL PUBLIC SCHOOL</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin:0;
+      color:gold;
+
+      background-image: url('school.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+
+      animation: zoomBg 20s ease-in-out infinite;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background: rgba(0,0,0,0.5);
+      z-index:0;
+    }
+
+    header, .container { position: relative; z-index: 1; }
+
+    @keyframes zoomBg {
+      0% { background-size: 100%; }
+      50% { background-size: 110%; }
+      100% { background-size: 100%; }
+    }
+
+    header {
+      background:#000;
+      padding:10px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:10px;
+    }
+
+    .logo {
+      width:40px;
+      height:40px;
+      border-radius:50%;
+      animation: logoZoom 3s ease-in-out infinite;
+    }
+
+    @keyframes logoZoom {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    .title {
+      font-size:20px;
+      font-weight:600;
+      background: linear-gradient(90deg, gold, white, gold);
+      background-size: 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shineText 3s linear infinite;
+    }
+
+    @keyframes shineText {
+      0% { background-position: 0%; }
+      100% { background-position: 200%; }
+    }
+
+    .container { padding:15px; }
+
+    .card {
+      background: rgba(0,0,0,0.75);
+      color:gold;
+      backdrop-filter: blur(10px);
+      padding:20px;
+      margin:20px auto;
+      border-radius:16px;
+      border:1px solid gold;
+      max-width:400px;
+      width:90%;
+    }
+
+    h3 { text-align:center; }
+
+    select, textarea, button, input {
+      padding:12px;
+      margin:8px 0;
+      width:100%;
+      border-radius:8px;
+      border:1px solid #ccc;
+      font-family: 'Poppins', sans-serif;
+      box-sizing:border-box;
+    }
+
+    button {
+      background:#000;
+      color:gold;
+      border:none;
+      font-weight:600;
+      cursor:pointer;
+    }
+
+    .back-btn { background:#333; }
+    .hidden { display:none; }
+
+    .hw-card {
+      background: rgba(0,0,0,0.85);
+      padding:12px;
+      margin:10px 0;
+      border-radius:10px;
+      border:1px solid gold;
+    }
+
+    .subject {
+      font-weight:bold;
+      padding:4px 8px;
+      border-radius:6px;
+      color:white;
+      display:inline-block;
+      margin-bottom:5px;
+    }
+
+    .Math { background:#1E88E5; }
+    .English { background:#43A047; }
+    .Science { background:#FB8C00; }
+    .Social { background:#8E24AA; }
+    .Hindi { background:#E53935; }
+    .ICT { background:#00ACC1; }
+    .ArtCraft { background:#F4511E; }
+    .Kannada { background:#3F51B5; } /* Indigo */
+
+  </style>
+</head>
+
+<body>
+
+<header>
+  <img src="logo.jpg" class="logo">
+  <span class="title">VED INTERNATIONAL PUBLIC SCHOOL</span>
+  <img src="logo.jpg" class="logo">
+</header>
+
+<div class="container">
+
+<div class="card" id="roleCard">
+  <h3>Select User</h3>
+  <button onclick="showTeacher()">👨‍🏫 Teacher</button>
+  <button onclick="showParent()">👨‍👩‍👧 Parent</button>
+</div>
+
+<div class="card hidden" id="teacherLogin">
+  <button class="back-btn" onclick="goBack()">⬅ Back</button>
+  <h3>Teacher Login</h3>
+  <input type="password" id="teacherPass" placeholder="Enter Password">
+  <button onclick="loginTeacher()">Login</button>
+</div>
+
+<div class="card hidden" id="teacherPanel">
+  <button class="back-btn" onclick="goBack()">⬅ Back</button>
+  <h3>Teacher Panel</h3>
+
+  <select id="hwClass">
+    <option value="">Select Class</option>
+    <option>1</option><option>2</option><option>3</option>
+    <option>4</option><option>5</option><option>6</option>
+    <option>7</option><option>8</option>
+  </select>
+
+  <select id="subject">
+    <option value="">Select Subject</option>
+<option>Math</option>
+<option>English</option>
+<option>Science</option>
+<option>Social</option>
+<option>Hindi</option>
+<option>Kannada</option>
+<option>ICT</option>
+<option>Art&Craft</option>
+  </select>
+
+  <textarea id="homework" placeholder="Speak or type homework"></textarea>
+  <button onclick="startVoice()">🎤 Speak</button>
+  <button onclick="saveHomework()">Save Homework</button>
+</div>
+
+<div class="card hidden" id="parentPanel">
+  <button class="back-btn" onclick="goBack()">⬅ Back</button>
+  <h3>Parent Portal</h3>
+
+  <select id="viewClass" onchange="displayHomework()">
+    <option value="">Select Class</option>
+    <option>1</option><option>2</option><option>3</option>
+    <option>4</option><option>5</option><option>6</option>
+    <option>7</option><option>8</option>
+  </select>
+
+  <div id="hwList"></div>
+</div>
+
+</div>
+
+<script>
+let homeworkData = JSON.parse(localStorage.getItem("homework")) || [];
+
+function startVoice() {
+  const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+
+  let selectedSubject = document.getElementById("subject").value;
+
+  // 🎯 Auto language based on subject
+  if (selectedSubject === "Hindi") {
+    recognition.lang = "hi-IN";
+  } 
+  else if (selectedSubject === "Kannada") {
+    recognition.lang = "kn-IN";
+  } 
+  else {
+    recognition.lang = "en-IN"; // default for other subjects
+  }
+
+  recognition.onstart = () => {
+    console.log("🎤 Listening...");
+  };
+
+  recognition.onresult = function(event) {
+    document.getElementById("homework").value = event.results[0][0].transcript;
+  };
+
+  recognition.onerror = function() {
+    alert("Voice error");
+  };
+
+  recognition.start();
+}
+
+function showTeacher(){
+  roleCard.classList.add("hidden");
+  teacherLogin.classList.remove("hidden");
+}
+
+function showParent(){
+  roleCard.classList.add("hidden");
+  parentPanel.classList.remove("hidden");
+}
+
+function goBack(){
+  teacherLogin.classList.add("hidden");
+  teacherPanel.classList.add("hidden");
+  parentPanel.classList.add("hidden");
+  roleCard.classList.remove("hidden");
+}
+
+function loginTeacher(){
+  if(document.getElementById("teacherPass").value === "1234"){
+    teacherLogin.classList.add("hidden");
+    teacherPanel.classList.remove("hidden");
+  } else alert("Wrong password");
+}
+
+function saveHomework(){
+  let data = {
+    cls: hwClass.value,
+    subject: subject.value,
+    hw: homework.value,
+    date: new Date().toLocaleDateString()
+  };
+
+  if(!data.cls || !data.subject || !data.hw){
+    alert("Fill all fields"); return;
+  }
+
+  homeworkData.push(data);
+  localStorage.setItem("homework", JSON.stringify(homeworkData));
+
+  alert("✅ Saved!");
+  homework.value = "";
+}
+
+function displayHomework(){
+  let cls = viewClass.value;
+  let list = document.getElementById("hwList");
+  list.innerHTML = "";
+
+  let filtered = homeworkData.filter(h => h.cls === cls);
+
+  if(filtered.length === 0){
+    list.innerHTML = "<p>No homework</p>"; return;
+  }
+
+  filtered.reverse().forEach(h => {
+    list.innerHTML += `
+      <div class="hw-card">
+        <div class="subject ${h.subject}">${h.subject}</div>
+        <div>📅 ${h.date}</div>
+        <div>📝 ${h.hw}</div>
+      </div>`;
+  });
+}
+</script>
+
+</body>
+</html>
