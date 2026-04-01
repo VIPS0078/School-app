@@ -13,32 +13,28 @@
       color:gold;
       min-height:100vh;
 
-      background-image: url('school.jpg');
+      background: url('school.jpg') no-repeat center center;
       background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
 
-      animation: zoomBg 20s ease-in-out infinite;
+      display:flex;
+      flex-direction:column;
     }
 
-    body::after {
+    /* Overlay */
+    body::before {
       content: "";
       position: fixed;
       top:0;
       left:0;
       width:100%;
       height:100%;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0,0,0,0.6);
       z-index:0;
     }
 
-    header, .container { position: relative; z-index: 1; }
-
-    @keyframes zoomBg {
-      0% { background-size: 100%; }
-      50% { background-size: 110%; }
-      100% { background-size: 100%; }
+    header, .container {
+      position: relative;
+      z-index: 1;
     }
 
     header {
@@ -84,6 +80,7 @@
       padding:10px;
       width:100%;
       box-sizing:border-box;
+      flex:1;
     }
 
     .card {
@@ -150,30 +147,12 @@
     .ICT { background:#00ACC1; }
     .ArtCraft { background:#F4511E; }
 
-    /* 📱 Mobile Optimization */
+    /* Mobile */
     @media (max-width: 600px) {
-
-      .title {
-        font-size:16px;
-      }
-
-      .logo {
-        width:30px;
-        height:30px;
-      }
-
-      .card {
-        width:100%;
-        margin:10px 0;
-        border-radius:12px;
-      }
-
-      select, textarea, button, input {
-        font-size:14px;
-        padding:10px;
-      }
+      .title { font-size:16px; }
+      .logo { width:30px; height:30px; }
+      .card { width:100%; margin:10px 0; }
     }
-
   </style>
 </head>
 
