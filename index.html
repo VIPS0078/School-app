@@ -208,19 +208,42 @@
 let homeworkData = JSON.parse(localStorage.getItem("homework")) || [];
 
 function startVoice() {
-  const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
 
-  let subject = document.getElementById("subject").value;
+  if (!('webkitSpeechRecognition' in window)) {
+    alert("Voice not supported in this browser. Use Chrome.");
+    return;
+  }
 
-  if(subject === "Hindi") recognition.lang = "hi-IN";
-  else if(subject === "Kannada") recognition.lang = "kn-IN";
-  else recognition.lang = "en-IN";
+  navigator.mediaDevices.getUserMedia({ audio: true })
+    .then(function(stream) {
 
-  recognition.onresult = function(event) {
-    document.getElementById("homework").value = event.results[0][0].transcript;
-  };
+      const recognition = new webkitSpeechRecognition();
 
-  recognition.start();
+      let subject = document.getElementById("subject").value;
+
+      if(subject === "Hindi") recognition.lang = "hi-IN";
+      else if(subject === "Kannada") recognition.lang = "kn-IN";
+      else recognition.lang = "en-IN";
+
+      recognition.onstart = function() {
+        console.log("🎤 Listening...");
+      };
+
+      recognition.onresult = function(event) {
+        document.getElementById("homework").value =
+          event.results[0][0].transcript;
+      };
+
+      recognition.onerror = function(event) {
+        alert("Error: " + event.error);
+      };
+
+      recognition.start();
+
+    })
+    .catch(function() {
+      alert("Microphone permission denied!");
+    });
 }
 
 function showTeacher(){
