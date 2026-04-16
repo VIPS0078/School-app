@@ -6,9 +6,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
-    * {
-  box-sizing: border-box;
-}
     body {
       font-family: 'Poppins', sans-serif;
       margin:0;
@@ -61,13 +58,13 @@
       -webkit-text-fill-color: transparent;
     }
 
-    .container {
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      height: calc(100vh - 60px);
-      padding:10px;
-    }
+   .container {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height: calc(100vh - 60px); /* ✅ FIX */
+  padding:10px;
+}
 
     .card {
       background: rgba(0,0,0,0.6);
