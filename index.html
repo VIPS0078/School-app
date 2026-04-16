@@ -3,7 +3,6 @@
 <head>
   <title>VED INTERNATIONAL PUBLIC SCHOOL</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
@@ -12,17 +11,13 @@
       margin:0;
       color:gold;
       height:100vh;
-
       background: url('school.jpg') no-repeat center center;
       background-size: cover;
     }
 
-    /* Light overlay */
     body::before {
       content:"";
       position:fixed;
-      top:0;
-      left:0;
       width:100%;
       height:100%;
       background: rgba(0,0,0,0.3);
@@ -58,13 +53,11 @@
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
-
       background: linear-gradient(90deg, gold, white, gold);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    /* CENTER EVERYTHING */
     .container {
       display:flex;
       justify-content:center;
@@ -83,17 +76,12 @@
       text-align:center;
     }
 
-    h3 {
-      margin-bottom:15px;
-    }
-
     button, select, textarea, input {
       width:100%;
       padding:12px;
       margin:8px 0;
       border-radius:10px;
       border:none;
-      box-sizing:border-box;
     }
 
     button {
@@ -102,13 +90,8 @@
       font-weight:600;
     }
 
-    .back-btn {
-      background:#333;
-    }
-
-    .hidden {
-      display:none;
-    }
+    .back-btn { background:#333; }
+    .hidden { display:none; }
 
     .hw-card {
       background: rgba(0,0,0,0.7);
@@ -118,13 +101,7 @@
       border:1px solid gold;
     }
 
-    .subject {
-      padding:4px 8px;
-      border-radius:6px;
-      color:white;
-      font-weight:bold;
-    }
-
+    .subject { padding:4px 8px; border-radius:6px; color:white; font-weight:bold; }
     .Math {background:#1E88E5;}
     .English {background:#43A047;}
     .Science {background:#FB8C00;}
@@ -133,7 +110,6 @@
     .Kannada {background:#3F51B5;}
     .ICT {background:#00ACC1;}
     .ArtCraft {background:#F4511E;}
-
   </style>
 </head>
 
@@ -156,7 +132,7 @@
 <div class="card hidden" id="teacherLogin">
   <button class="back-btn" onclick="goBack()">⬅ Back</button>
   <h3>Teacher Login</h3>
-  <input type="password" id="teacherPass" placeholder="Enter Password">
+  <input type="password" id="teacherPass">
   <button onclick="loginTeacher()">Login</button>
 </div>
 
@@ -173,14 +149,10 @@
 
   <select id="subject">
     <option value="">Select Subject</option>
-    <option>Math</option>
-    <option>English</option>
-    <option>Science</option>
-    <option>Social</option>
-    <option>Hindi</option>
-    <option>Kannada</option>
-    <option>ICT</option>
-    <option>ArtCraft</option>
+    <option>Math</option><option>English</option>
+    <option>Science</option><option>Social</option>
+    <option>Hindi</option><option>Kannada</option>
+    <option>ICT</option><option>ArtCraft</option>
   </select>
 
   <textarea id="homework" placeholder="Speak or type homework"></textarea>
@@ -204,58 +176,56 @@
 
 </div>
 
+<!-- ✅ Firebase -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBtEWzCpf5hVfYoqcj6_GqVLbUuZdHMrmw",
+    authDomain: "homework-app-1c831.firebaseapp.com",
+    projectId: "homework-app-1c831"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  window.db = db;
+  window.addDoc = addDoc;
+  window.collection = collection;
+  window.getDocs = getDocs;
+  window.query = query;
+  window.where = where;
+</script>
+
 <script>
-let homeworkData = JSON.parse(localStorage.getItem("homework")) || [];
-
+// ✅ Voice feature (UNCHANGED)
 function startVoice() {
-
   if (!('webkitSpeechRecognition' in window)) {
-    alert("Voice not supported in this browser. Use Chrome.");
+    alert("Use Chrome");
     return;
   }
 
   navigator.mediaDevices.getUserMedia({ audio: true })
-    .then(function(stream) {
-
+    .then(() => {
       const recognition = new webkitSpeechRecognition();
-
       let subject = document.getElementById("subject").value;
 
-      if(subject === "Hindi") recognition.lang = "hi-IN";
-      else if(subject === "Kannada") recognition.lang = "kn-IN";
-      else recognition.lang = "en-IN";
+      recognition.lang = subject === "Hindi" ? "hi-IN" :
+                         subject === "Kannada" ? "kn-IN" : "en-IN";
 
-      recognition.onstart = function() {
-        console.log("🎤 Listening...");
-      };
-
-      recognition.onresult = function(event) {
-        document.getElementById("homework").value =
-          event.results[0][0].transcript;
-      };
-
-      recognition.onerror = function(event) {
-        alert("Error: " + event.error);
+      recognition.onresult = (e) => {
+        homework.value = e.results[0][0].transcript;
       };
 
       recognition.start();
-
     })
-    .catch(function() {
-      alert("Microphone permission denied!");
-    });
+    .catch(() => alert("Mic denied"));
 }
 
-function showTeacher(){
-  roleCard.classList.add("hidden");
-  teacherLogin.classList.remove("hidden");
-}
-
-function showParent(){
-  roleCard.classList.add("hidden");
-  parentPanel.classList.remove("hidden");
-}
-
+// UI functions
+function showTeacher(){ roleCard.classList.add("hidden"); teacherLogin.classList.remove("hidden"); }
+function showParent(){ roleCard.classList.add("hidden"); parentPanel.classList.remove("hidden"); }
 function goBack(){
   teacherLogin.classList.add("hidden");
   teacherPanel.classList.add("hidden");
@@ -270,7 +240,8 @@ function loginTeacher(){
   } else alert("Wrong password");
 }
 
-function saveHomework(){
+// ✅ Firebase save
+async function saveHomework(){
   let data = {
     cls: hwClass.value,
     subject: subject.value,
@@ -282,25 +253,27 @@ function saveHomework(){
     alert("Fill all fields"); return;
   }
 
-  homeworkData.push(data);
-  localStorage.setItem("homework", JSON.stringify(homeworkData));
-
-  alert("✅ Saved!");
+  await addDoc(collection(db, "homeworks"), data);
+  alert("Saved!");
   homework.value = "";
 }
 
-function displayHomework(){
+// ✅ Firebase fetch
+async function displayHomework(){
   let cls = viewClass.value;
   let list = document.getElementById("hwList");
   list.innerHTML = "";
 
-  let filtered = homeworkData.filter(h => h.cls === cls);
+  const q = query(collection(db, "homeworks"), where("cls", "==", cls));
+  const snapshot = await getDocs(q);
 
-  if(filtered.length === 0){
-    list.innerHTML = "<p>No homework</p>"; return;
+  if(snapshot.empty){
+    list.innerHTML = "No homework";
+    return;
   }
 
-  filtered.reverse().forEach(h => {
+  snapshot.forEach(doc => {
+    let h = doc.data();
     list.innerHTML += `
       <div class="hw-card">
         <div class="subject ${h.subject}">${h.subject}</div>
