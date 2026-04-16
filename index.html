@@ -181,11 +181,14 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyBtEWzCpf5hVfYoqcj6_GqVLbUuZdHMrmw",
-    authDomain: "homework-app-1c831.firebaseapp.com",
-    projectId: "homework-app-1c831"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyBtEWzCpf5hVfYoqcj6_GqVLbUuZdHMrmw",
+  authDomain: "homework-app-1c831.firebaseapp.com",
+  projectId: "homework-app-1c831",
+  storageBucket: "homework-app-1c831.firebasestorage.app",
+  messagingSenderId: "888130243111",
+  appId: "1:888130243111:web:be2fbf4bfe9aa9b357dc02"
+};
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
