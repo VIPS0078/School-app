@@ -165,7 +165,7 @@
 <div class="card hidden" id="teacherLogin">
   <button class="back-btn" onclick="goBack()">⬅ Back</button>
   <h3>Teacher Login</h3>
-  <input type="password" id="teacherPass">
+  <input type="password" id="teacherPass" placeholder="Enter Password">
   <button onclick="loginTeacher()">Login</button>
 </div>
 
@@ -270,7 +270,7 @@ function goBack(){
 }
 
 function loginTeacher(){
-  if(document.getElementById("teacherPass").value === "1234"){
+  if(document.getElementById("teacherPass").value === "Vips@777"){
     teacherLogin.classList.add("hidden");
     teacherPanel.classList.remove("hidden");
   } else alert("Wrong password");
