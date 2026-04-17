@@ -11,23 +11,23 @@
       margin:0;
       color:gold;
       height:100vh;
-      margin: 0;
-      overflow-y: auto;   /* ✅ allow vertical scroll */
+      overflow-y: auto;
       overflow-x: hidden;
       background: url('school.jpg') no-repeat center center;
       background-size: cover;
     }
-   * {
-  box-sizing: border-box;
-  max-width: 100%;
-}
-  input::placeholder,
-textarea::placeholder {
-  color: #ccc;
-  opacity: 1;
-}
 
-    /* Light overlay */
+   * {
+      box-sizing: border-box;
+      max-width: 100%;
+   }
+
+   input::placeholder,
+   textarea::placeholder {
+      color: #ccc;
+      opacity: 1;
+   }
+
     body::before {
       content:"";
       position:fixed;
@@ -68,17 +68,15 @@ textarea::placeholder {
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
-
       background: linear-gradient(90deg, gold, white, gold);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    /* CENTER EVERYTHING */
 .container {
   display: flex;
   justify-content: center;
-  align-items: flex-start;   /* 🔥 CHANGE: was center */
+  align-items: flex-start;
   min-height: calc(100vh - 60px);
   padding: 20px 10px;
 }
@@ -93,18 +91,13 @@ textarea::placeholder {
   text-align: center;
 }
 
-    h3 {
-      margin-bottom:15px;
-    }
-
     button, select, textarea, input {
       width:100%;
       padding:12px;
       margin:8px 0;
       border-radius:10px;
       border:none;
-      box-sizing:border-box;
-      font-size: 14px;
+      font-size:14px;
     }
 
     button {
@@ -112,17 +105,14 @@ textarea::placeholder {
       color:gold;
       font-weight:600;
     }
+
     textarea {
-  resize: none;
-  width: 100%;
-}
-    .back-btn {
-      background:#333;
+      resize: none;
+      width: 100%;
     }
 
-    .hidden {
-      display:none;
-    }
+    .back-btn { background:#333; }
+    .hidden { display:none; }
 
     .hw-card {
       background: rgba(0,0,0,0.7);
@@ -132,13 +122,7 @@ textarea::placeholder {
       border:1px solid gold;
     }
 
-    .subject {
-      padding:4px 8px;
-      border-radius:6px;
-      color:white;
-      font-weight:bold;
-    }
-
+    .subject { padding:4px 8px; border-radius:6px; color:white; font-weight:bold; }
     .Math {background:#1E88E5;}
     .English {background:#43A047;}
     .Science {background:#FB8C00;}
@@ -147,7 +131,6 @@ textarea::placeholder {
     .Kannada {background:#3F51B5;}
     .ICT {background:#00ACC1;}
     .ArtCraft {background:#F4511E;}
-
   </style>
 </head>
 
@@ -196,6 +179,9 @@ textarea::placeholder {
   <textarea id="homework" placeholder="Speak or type homework"></textarea>
   <button onclick="startVoice()">🎤 Speak</button>
   <button onclick="saveHomework()">Save Homework</button>
+
+  <!-- ✅ Delete Button -->
+  <button onclick="deleteByDate()">🗑 Delete by Date</button>
 </div>
 
 <div class="card hidden" id="parentPanel">
@@ -214,19 +200,19 @@ textarea::placeholder {
 
 </div>
 
-<!-- ✅ Firebase -->
+<!-- Firebase -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, getDocs, query, where, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBtEWzCpf5hVfYoqcj6_GqVLbUuZdHMrmw",
-  authDomain: "homework-app-1c831.firebaseapp.com",
-  projectId: "homework-app-1c831",
-  storageBucket: "homework-app-1c831.firebasestorage.app",
-  messagingSenderId: "888130243111",
-  appId: "1:888130243111:web:be2fbf4bfe9aa9b357dc02"
-};
+  const firebaseConfig = {
+    apiKey: "AIzaSyBtEWzCpf5hVfYoqcj6_GqVLbUuZdHMrmw",
+    authDomain: "homework-app-1c831.firebaseapp.com",
+    projectId: "homework-app-1c831",
+    storageBucket: "homework-app-1c831.firebasestorage.app",
+    messagingSenderId: "888130243111",
+    appId: "1:888130243111:web:be2fbf4bfe9aa9b357dc02"
+  };
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
@@ -237,10 +223,11 @@ const firebaseConfig = {
   window.getDocs = getDocs;
   window.query = query;
   window.where = where;
+  window.deleteDoc = deleteDoc;
+  window.doc = doc;
 </script>
 
 <script>
-// ✅ Voice feature (UNCHANGED)
 function startVoice() {
   if (!('webkitSpeechRecognition' in window)) {
     alert("Use Chrome");
@@ -264,7 +251,6 @@ function startVoice() {
     .catch(() => alert("Mic denied"));
 }
 
-// UI functions
 function showTeacher(){ roleCard.classList.add("hidden"); teacherLogin.classList.remove("hidden"); }
 function showParent(){ roleCard.classList.add("hidden"); parentPanel.classList.remove("hidden"); }
 function goBack(){
@@ -281,7 +267,6 @@ function loginTeacher(){
   } else alert("Wrong password");
 }
 
-// ✅ Firebase save
 async function saveHomework(){
   let data = {
     cls: hwClass.value,
@@ -299,7 +284,6 @@ async function saveHomework(){
   homework.value = "";
 }
 
-// ✅ Firebase fetch
 async function displayHomework(){
   let cls = viewClass.value;
   let list = document.getElementById("hwList");
@@ -313,8 +297,11 @@ async function displayHomework(){
     return;
   }
 
-  snapshot.forEach(doc => {
-    let h = doc.data();
+  snapshot.forEach(docSnap => {
+    let h = docSnap.data();
+
+    if(!h || !h.subject || !h.hw) return;
+
     list.innerHTML += `
       <div class="hw-card">
         <div class="subject ${h.subject}">${h.subject}</div>
@@ -322,6 +309,27 @@ async function displayHomework(){
         <div>📝 ${h.hw}</div>
       </div>`;
   });
+}
+
+async function deleteByDate(){
+  let selectedDate = prompt("Enter date (DD/MM/YYYY)");
+
+  if(!selectedDate) return;
+
+  const q = query(collection(db, "homeworks"), where("date", "==", selectedDate));
+  const snapshot = await getDocs(q);
+
+  if(snapshot.empty){
+    alert("No homework found");
+    return;
+  }
+
+  snapshot.forEach(async (docSnap) => {
+    await deleteDoc(doc(db, "homeworks", docSnap.id));
+  });
+
+  alert("Deleted ✅");
+  displayHomework();
 }
 </script>
 
