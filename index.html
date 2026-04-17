@@ -229,28 +229,43 @@
 
 <script>
 function startVoice() {
+
   if (!('webkitSpeechRecognition' in window)) {
-    alert("Use Chrome");
+    alert("Voice not supported in this browser. Use Chrome.");
     return;
   }
 
   navigator.mediaDevices.getUserMedia({ audio: true })
-    .then(() => {
+    .then(function(stream) {
+
       const recognition = new webkitSpeechRecognition();
+
       let subject = document.getElementById("subject").value;
 
-      recognition.lang = subject === "Hindi" ? "hi-IN" :
-                         subject === "Kannada" ? "kn-IN" : "en-IN";
+      if(subject === "Hindi") recognition.lang = "hi-IN";
+      else if(subject === "Kannada") recognition.lang = "kn-IN";
+      else recognition.lang = "en-IN";
 
-      recognition.onresult = (e) => {
-        homework.value = e.results[0][0].transcript;
+      recognition.onstart = function() {
+        console.log("🎤 Listening...");
+      };
+
+      recognition.onresult = function(event) {
+        document.getElementById("homework").value =
+          event.results[0][0].transcript;
+      };
+
+      recognition.onerror = function(event) {
+        alert("Error: " + event.error);
       };
 
       recognition.start();
-    })
-    .catch(() => alert("Mic denied"));
-}
 
+    })
+    .catch(function() {
+      alert("Microphone permission denied!");
+    });
+}
 function showTeacher(){ roleCard.classList.add("hidden"); teacherLogin.classList.remove("hidden"); }
 function showParent(){ roleCard.classList.add("hidden"); parentPanel.classList.remove("hidden"); }
 function goBack(){
