@@ -231,42 +231,34 @@
 function startVoice() {
 
   if (!('webkitSpeechRecognition' in window)) {
-    alert("Voice not supported in this browser. Use Chrome.");
+    alert("Use Chrome browser");
     return;
   }
 
-  navigator.mediaDevices.getUserMedia({ audio: true })
-    .then(function(stream) {
+  const recognition = new webkitSpeechRecognition();
 
-      const recognition = new webkitSpeechRecognition();
+  let subject = document.getElementById("subject").value;
 
-      let subject = document.getElementById("subject").value;
+  if(subject === "Hindi") recognition.lang = "hi-IN";
+  else if(subject === "Kannada") recognition.lang = "kn-IN";
+  else recognition.lang = "en-IN";
 
-      if(subject === "Hindi") recognition.lang = "hi-IN";
-      else if(subject === "Kannada") recognition.lang = "kn-IN";
-      else recognition.lang = "en-IN";
+  recognition.onstart = function () {
+    console.log("🎤 Listening...");
+  };
 
-      recognition.onstart = function() {
-        console.log("🎤 Listening...");
-      };
+  recognition.onresult = function (event) {
+    document.getElementById("homework").value =
+      event.results[0][0].transcript;
+  };
 
-      recognition.onresult = function(event) {
-        document.getElementById("homework").value =
-          event.results[0][0].transcript;
-      };
+  recognition.onerror = function (event) {
+    alert("Error: " + event.error);
+  };
 
-      recognition.onerror = function(event) {
-        alert("Error: " + event.error);
-      };
-
-      recognition.start();
-
-    })
-    .catch(function() {
-      alert("Microphone permission denied!");
-    });
+  recognition.start();
 }
-function showTeacher(){ roleCard.classList.add("hidden"); teacherLogin.classList.remove("hidden"); }
+  function showTeacher(){ roleCard.classList.add("hidden"); teacherLogin.classList.remove("hidden"); }
 function showParent(){ roleCard.classList.add("hidden"); parentPanel.classList.remove("hidden"); }
 function goBack(){
   teacherLogin.classList.add("hidden");
